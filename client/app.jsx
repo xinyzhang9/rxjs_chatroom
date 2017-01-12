@@ -45,3 +45,45 @@ var PresencePane = React.createClass({
 		);
 	}
 });
+
+var ChatPane = React.createClass({
+	componentDidMount(){
+
+	},
+	render(){
+		return(
+			<div>
+				<h4>Your nickname is {this.props.data.nickname}</h4>
+				<ul className = 'collection'>
+				{
+					this.props.data.messages.map((message,index)=>{
+						return(
+							<li className = 'collection-item' key = {message.timestamp}>
+								<span className = 'title'>{message.who}<i>{moment(parseInt(message.timestamp)).format('YYYY-mm-dd HH:mm:ss')}</i></span>
+								<p>
+									<strong>{message.message}</strong>
+								</p>
+							</li>
+						)
+					})
+				}
+				</ul>
+				<div className = 'row'>
+					<div className = 'input-field col s10'>
+						<input id = 'message-input' type = 'text' className = 'validate' ref = 'message' />
+						<label className = 'active' htmlFor = 'message-input'>press enter to send your message</label>
+					</div>
+					<div className = 'input-field col s2'>
+						<a id = 'sendBtn' className = 'btn-floating waves-effect waves-light green'>
+							<i className = 'material-icons'>send</i>
+						</a>
+					</div>
+				</div>
+			</div>
+		)
+	}
+});
+
+var Main = React.createClass({
+
+})
