@@ -5,7 +5,8 @@ var bodyParser = require('body-parser');
 var Rx = require('rx');
 var Immutable = require('immutable');
 var app = express();
-// customized vars
+
+// record all users
 var usersMap = Immutable.Map({});
 
 app.use(bodyParser.json());
