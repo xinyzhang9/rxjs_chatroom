@@ -167,10 +167,15 @@ var Main = React.createClass({
 });//main
 
 var createNickName = (len) => {
+	var num_len = len-2;
 	var text = '';
-	var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
-	for(var i = 0; i < len; i++){
-		text += possible.charAt(Math.floor(Math.random()*possible.length));
+	var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	var nums = '0123456789';
+	for(var i = 0; i < 2; i++){
+		text += letters.charAt(Math.floor(Math.random()*letters.length));
+	}
+	for(var i = 0; i < num_len; i++){
+		text += nums.charAt(Math.floor(Math.random()*nums.length));
 	}
 
 	return text;

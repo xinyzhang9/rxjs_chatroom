@@ -291,7 +291,6 @@
 					socketId: data.socketId,
 					connectTime: data.connectTime
 				});
-				console.log('client connect success');
 			});
 
 			var socketAllUsersStream = Rx.Observable.create(function (observer) {
@@ -302,7 +301,6 @@
 
 			socketAllUsersStream.subscribe(function (data) {
 				self.setState({ users: data }); // don't miss{}
-				console.log(self.state.users);
 			});
 
 			var socketMessagesStream = Rx.Observable.create(function (observer) {
@@ -314,7 +312,6 @@
 			socketMessagesStream.subscribe(function (data) {
 				messages.push(data);
 				self.setState(messages);
-				console.log(self.state);
 			});
 		},
 		render: function render() {
@@ -341,10 +338,15 @@
 	}); //main
 
 	var createNickName = function createNickName(len) {
+		var num_len = len - 2;
 		var text = '';
-		var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
-		for (var i = 0; i < len; i++) {
-			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		var nums = '0123456789';
+		for (var i = 0; i < 2; i++) {
+			text += letters.charAt(Math.floor(Math.random() * letters.length));
+		}
+		for (var i = 0; i < num_len; i++) {
+			text += nums.charAt(Math.floor(Math.random() * nums.length));
 		}
 
 		return text;

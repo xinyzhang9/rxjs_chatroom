@@ -47,10 +47,12 @@ var sourceConnect = Rx.Observable.create(function(observer){
 });
 
 var sourceDisconnect = Rx.Observable.create(function(observable){
-	io.on('disconnect',function(socket){
-		observable.onNext({
-			'socketId':socket.id,
-			'event': 'clientDisconnect'
+	io.on('connection',function(socket){
+		socket.on('disconnect',function(data){
+			observable.onNext({
+				'socketId':socket.id,
+				'event': 'clientDisconnect'
+			});
 		});
 	});
 	return function(){
