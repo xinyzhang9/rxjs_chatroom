@@ -82,5 +82,6 @@ let createNickName = (len) => {
 	return text;
 }
 
+
 ReactDOM.render(<Main nickname = {createNickName(5)} />, document.getElementById('container'));
 

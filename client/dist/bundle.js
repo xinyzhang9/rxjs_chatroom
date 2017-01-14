@@ -343,19 +343,24 @@
 							'li',
 							{ className: 'collection-item', key: message.timestamp },
 							React.createElement(
-								'span',
-								{ className: 'title' },
-								message.who,
-								' ',
+								'div',
+								{ className: 'chip' },
+								React.createElement('img', { src: mapImage(message.who), alt: 'Contact Person' }),
 								React.createElement(
 									'span',
-									{ style: { color: 'red' } },
-									'@'
-								),
-								React.createElement(
-									'span',
-									{ style: { color: 'green' } },
-									moment(parseInt(message.timestamp)).format('YYYY-MM-DD HH:mm:ss')
+									{ className: 'title' },
+									message.who,
+									' ',
+									React.createElement(
+										'span',
+										{ style: { color: 'red' } },
+										'@ '
+									),
+									React.createElement(
+										'span',
+										{ style: { color: 'green' } },
+										moment(parseInt(message.timestamp)).format('YYYY-MM-DD HH:mm:ss')
+									)
 								)
 							),
 							React.createElement(
@@ -401,6 +406,22 @@
 			);
 		}
 	});
+
+	var mapImage = function mapImage(x) {
+		var hash = 0,
+		    i = void 0,
+		    chr = void 0,
+		    len = void 0;
+		if (x.length === 0) return hash;
+		for (i = 0, len = x.length; i < len; i++) {
+			chr = x.charCodeAt(i);
+			hash = (hash << 5) - hash + chr;
+			hash |= 0; // Convert to 32bit integer
+		}
+
+		var res = hash % 40;
+		return 'images/f' + res + '.jpg';
+	};
 
 	exports.default = ChatPane;
 

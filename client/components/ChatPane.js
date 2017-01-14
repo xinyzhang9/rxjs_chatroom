@@ -31,7 +31,11 @@ const ChatPane = React.createClass({
 					this.props.data.messages.map((message,index)=>{
 						return(
 							<li className = 'collection-item' key = {message.timestamp}>
-								<span className = 'title'>{message.who} <span style = {{color:'red'}}>@</span><span style = {{color:'green'}}>{moment(parseInt(message.timestamp)).format('YYYY-MM-DD HH:mm:ss')}</span></span>
+								<div className="chip">
+							    	<img src= {mapImage(message.who)} alt="Contact Person" />
+							    	<span className = 'title'>{message.who} <span style = {{color:'red'}}>@ </span><span style = {{color:'green'}}>{moment(parseInt(message.timestamp)).format('YYYY-MM-DD HH:mm:ss')}</span></span>
+							  	</div>
+								
 								<p>
 									<strong>{message.message}</strong>
 								</p>
@@ -55,5 +59,18 @@ const ChatPane = React.createClass({
 		)
 	}
 });
+
+let mapImage = function(x) {
+  let hash = 0, i, chr, len;
+  if (x.length === 0) return hash;
+  for (i = 0, len = x.length; i < len; i++) {
+    chr   = x.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+
+  let res = hash % 40;
+  return 'images/f'+res+'.jpg';
+};
 
 export default ChatPane;
