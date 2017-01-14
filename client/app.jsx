@@ -1,110 +1,10 @@
 
-// create UI here
-var AppBar = React.createClass({
-	render(){
-		return (
-			<div className = 'navbar-fixed' >
-				<nav>
-					<div className = 'nav-wrapper' style = {{backgroundColor: 'steelblue'}}>
-						<a href = '#' className = 'brand-logo center'>Welcome to Rxjs Chat Room</a>
-						<ul id="nav-mobile" className="right hide-on-med-and-down">
-					        <li><a href="https://github.com/xinyzhang9/rxjs_chatroom" target = '_blank'>Source Code</a></li>
-					        <li><a href="https://xinyzhang9.github.io/" target = '_blank'>About Author</a></li>
-					    </ul>
-					</div>
-				</nav>
-			</div>
-		);
-	}
-});
+// import components
+import AppBar from './components/AppBar';
+import PresencePane from './components/PresencePane';
+import ChatPane from './components/ChatPane';
 
-var PresencePane = React.createClass({
-	render(){
-		return(
-			<div>
-				<h5>Online Users</h5>
-				<table className = 'striped'>
-					<thead>
-						<tr>
-							<th data-field = 'id'>Chat ID</th>
-							<th data-field = 'name>'>Joined Time</th>
-						</tr>
-					</thead>
-					<tbody>
-						{
-							this.props.data.map((user, index) => {
-								return <tr key = {user.nickname}>
-											<td>{user.nickname}</td>
-											<td>{moment(user.connectTime).format('YYYY-MM-DD HH:mm:ss')}</td>
-										</tr>
-							})
-						}
-					</tbody>
-				</table>
-			</div>
-		);
-	}
-});
-
-var ChatPane = React.createClass({
-	componentDidMount(){
-		var button = document.getElementById('sendBtn');
-		var textField = document.getElementById('message-input');
-
-		var clickStream = Rx.Observable.fromEvent(button, 'click').map(e => true);
-		var enterKeyPressedStream = Rx.Observable.fromEvent(textField,'keyup').filter(e => e.keyCode === 13);
-		var textEnteredStream = Rx.Observable.fromEvent(textField,'keyup').map(e => e.target.value);
-		var sendMessageStream = Rx.Observable.merge(clickStream, enterKeyPressedStream);
-
-		var mergedStream = textEnteredStream.takeUntil(sendMessageStream);
-
-		var text = '';
-		var onNext = t => { text = t; };
-		var onError = e => {};
-		var onComplete = () => {
-			$.post('/message', {'message': text, 'who': this.props.data.nickname, 'timestamp': Date.now()});
-			textField.value = '';
-			textField.focus();
-			mergedStream.subscribe(onNext, onError, onComplete);
-		};
-
-		mergedStream.subscribe(onNext, onError, onComplete);
-	},
-	render(){
-		return(
-			<div>
-				<h5>Your Chat ID is <i>{this.props.data.nickname}</i></h5>
-				<ul className = 'collection'>
-				{
-					this.props.data.messages.map((message,index)=>{
-						return(
-							<li className = 'collection-item' key = {message.timestamp}>
-								<span className = 'title'>{message.who} <span style = {{color:'red'}}>@</span><span style = {{color:'green'}}>{moment(parseInt(message.timestamp)).format('YYYY-MM-DD HH:mm:ss')}</span></span>
-								<p>
-									<strong>{message.message}</strong>
-								</p>
-							</li>
-						)
-					})
-				}
-				</ul>
-				<div className = 'row'>
-					<div className = 'input-field col s10'>
-						<input id = 'message-input' type = 'text' className = 'validate' ref = 'message' />
-						<label className = 'active' htmlFor = 'message-input'>press enter to send your message</label>
-					</div>
-					<div className = 'input-field col s2'>
-						<a id = 'sendBtn' className = 'btn-floating waves-effect waves-light green'>
-							<i className = 'material-icons'>send</i>
-						</a>
-					</div>
-				</div>
-			</div>
-		)
-	}
-});
-
-var Main = React.createClass({
+const Main = React.createClass({
 	getInitialState(){
 		return{
 			users: [],
@@ -112,13 +12,13 @@ var Main = React.createClass({
 		}
 	},
 	componentDidMount(){
-		var socket = io();
-		var props = this.props;
-		var users = this.state.users;
-		var messages = this.state.messages;
-		var self = this;
+		let socket = io();
+		let props = this.props;
+		let users = this.state.users;
+		let messages = this.state.messages;
+		let self = this;
 
-		var socketIdStream = Rx.Observable.create(observer => {
+		let socketIdStream = Rx.Observable.create(observer => {
 			socket.on('mySocketId', data => { observer.onNext(data); });
 		});
 
@@ -130,7 +30,7 @@ var Main = React.createClass({
 			});
 		});
 
-		var socketAllUsersStream = Rx.Observable.create(observer => {
+		let socketAllUsersStream = Rx.Observable.create(observer => {
 			socket.on('allUsers', data => { observer.onNext(data); });
 		});
 
@@ -138,7 +38,7 @@ var Main = React.createClass({
 			self.setState({users: data}); // don't miss{}
 		});
 
-		var socketMessagesStream = Rx.Observable.create(observer => {
+		let socketMessagesStream = Rx.Observable.create(observer => {
 			socket.on('message', data => { observer.onNext(data); });
 		});
 
@@ -164,22 +64,23 @@ var Main = React.createClass({
 			</div>	
 		);
 	}
-});//main
+});
 
-var createNickName = (len) => {
-	var num_len = len-2;
-	var text = '';
-	var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	var nums = '0123456789';
-	for(var i = 0; i < 2; i++){
+//utility function
+let createNickName = (len) => {
+	const num_len = len-2;
+	let text = '';
+	const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	const nums = '0123456789';
+	for(let i = 0; i < 2; i++){
 		text += letters.charAt(Math.floor(Math.random()*letters.length));
 	}
-	for(var i = 0; i < num_len; i++){
+	for(let i = 0; i < num_len; i++){
 		text += nums.charAt(Math.floor(Math.random()*nums.length));
 	}
 
 	return text;
 }
 
-ReactDOM.render(<Main  nickname = {createNickName(5)} />, document.getElementById('container'));
+ReactDOM.render(<Main nickname = {createNickName(5)} />, document.getElementById('container'));
 

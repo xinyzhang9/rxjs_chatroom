@@ -42,11 +42,126 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _AppBar = __webpack_require__(1);
+
+	var _AppBar2 = _interopRequireDefault(_AppBar);
+
+	var _PresencePane = __webpack_require__(2);
+
+	var _PresencePane2 = _interopRequireDefault(_PresencePane);
+
+	var _ChatPane = __webpack_require__(3);
+
+	var _ChatPane2 = _interopRequireDefault(_ChatPane);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Main = React.createClass({
+		displayName: 'Main',
+		getInitialState: function getInitialState() {
+			return {
+				users: [],
+				messages: []
+			};
+		},
+		componentDidMount: function componentDidMount() {
+			var socket = io();
+			var props = this.props;
+			var users = this.state.users;
+			var messages = this.state.messages;
+			var self = this;
+
+			var socketIdStream = Rx.Observable.create(function (observer) {
+				socket.on('mySocketId', function (data) {
+					observer.onNext(data);
+				});
+			});
+
+			socketIdStream.subscribe(function (data) {
+				socket.emit('clientConnect', {
+					nickname: props.nickname,
+					socketId: data.socketId,
+					connectTime: data.connectTime
+				});
+			});
+
+			var socketAllUsersStream = Rx.Observable.create(function (observer) {
+				socket.on('allUsers', function (data) {
+					observer.onNext(data);
+				});
+			});
+
+			socketAllUsersStream.subscribe(function (data) {
+				self.setState({ users: data }); // don't miss{}
+			});
+
+			var socketMessagesStream = Rx.Observable.create(function (observer) {
+				socket.on('message', function (data) {
+					observer.onNext(data);
+				});
+			});
+
+			socketMessagesStream.subscribe(function (data) {
+				messages.push(data);
+				self.setState(messages);
+			});
+		},
+		render: function render() {
+			return React.createElement(
+				'div',
+				null,
+				React.createElement(_AppBar2.default, null),
+				React.createElement(
+					'div',
+					{ className: 'row' },
+					React.createElement(
+						'div',
+						{ className: 'col s6' },
+						React.createElement(_ChatPane2.default, { data: { nickname: this.props.nickname, messages: this.state.messages } })
+					),
+					React.createElement(
+						'div',
+						{ className: 'col s6' },
+						React.createElement(_PresencePane2.default, { data: this.state.users })
+					)
+				)
+			);
+		}
+	});
+
+	//utility function
+
+	// import components
+	var createNickName = function createNickName(len) {
+		var num_len = len - 2;
+		var text = '';
+		var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		var nums = '0123456789';
+		for (var i = 0; i < 2; i++) {
+			text += letters.charAt(Math.floor(Math.random() * letters.length));
+		}
+		for (var _i = 0; _i < num_len; _i++) {
+			text += nums.charAt(Math.floor(Math.random() * nums.length));
+		}
+
+		return text;
+	};
+
+	ReactDOM.render(React.createElement(Main, { nickname: createNickName(5) }), document.getElementById('container'));
+
+/***/ },
+/* 1 */
 /***/ function(module, exports) {
 
 	'use strict';
 
-	// create UI here
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 	var AppBar = React.createClass({
 		displayName: 'AppBar',
 		render: function render() {
@@ -92,6 +207,17 @@
 		}
 	});
 
+	exports.default = AppBar;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 	var PresencePane = React.createClass({
 		displayName: 'PresencePane',
 		render: function render() {
@@ -149,6 +275,17 @@
 		}
 	});
 
+	exports.default = PresencePane;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 	var ChatPane = React.createClass({
 		displayName: 'ChatPane',
 		componentDidMount: function componentDidMount() {
@@ -250,11 +387,12 @@
 						'div',
 						{ className: 'input-field col s2' },
 						React.createElement(
-							'a',
-							{ id: 'sendBtn', className: 'btn-floating waves-effect waves-light green' },
+							'button',
+							{ className: 'btn waves-effect waves-light', type: 'submit', id: 'sendBtn' },
+							'Send',
 							React.createElement(
 								'i',
-								{ className: 'material-icons' },
+								{ className: 'material-icons right' },
 								'send'
 							)
 						)
@@ -264,95 +402,7 @@
 		}
 	});
 
-	var Main = React.createClass({
-		displayName: 'Main',
-		getInitialState: function getInitialState() {
-			return {
-				users: [],
-				messages: []
-			};
-		},
-		componentDidMount: function componentDidMount() {
-			var socket = io();
-			var props = this.props;
-			var users = this.state.users;
-			var messages = this.state.messages;
-			var self = this;
-
-			var socketIdStream = Rx.Observable.create(function (observer) {
-				socket.on('mySocketId', function (data) {
-					observer.onNext(data);
-				});
-			});
-
-			socketIdStream.subscribe(function (data) {
-				socket.emit('clientConnect', {
-					nickname: props.nickname,
-					socketId: data.socketId,
-					connectTime: data.connectTime
-				});
-			});
-
-			var socketAllUsersStream = Rx.Observable.create(function (observer) {
-				socket.on('allUsers', function (data) {
-					observer.onNext(data);
-				});
-			});
-
-			socketAllUsersStream.subscribe(function (data) {
-				self.setState({ users: data }); // don't miss{}
-			});
-
-			var socketMessagesStream = Rx.Observable.create(function (observer) {
-				socket.on('message', function (data) {
-					observer.onNext(data);
-				});
-			});
-
-			socketMessagesStream.subscribe(function (data) {
-				messages.push(data);
-				self.setState(messages);
-			});
-		},
-		render: function render() {
-			return React.createElement(
-				'div',
-				null,
-				React.createElement(AppBar, null),
-				React.createElement(
-					'div',
-					{ className: 'row' },
-					React.createElement(
-						'div',
-						{ className: 'col s6' },
-						React.createElement(ChatPane, { data: { nickname: this.props.nickname, messages: this.state.messages } })
-					),
-					React.createElement(
-						'div',
-						{ className: 'col s6' },
-						React.createElement(PresencePane, { data: this.state.users })
-					)
-				)
-			);
-		}
-	}); //main
-
-	var createNickName = function createNickName(len) {
-		var num_len = len - 2;
-		var text = '';
-		var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		var nums = '0123456789';
-		for (var i = 0; i < 2; i++) {
-			text += letters.charAt(Math.floor(Math.random() * letters.length));
-		}
-		for (var i = 0; i < num_len; i++) {
-			text += nums.charAt(Math.floor(Math.random() * nums.length));
-		}
-
-		return text;
-	};
-
-	ReactDOM.render(React.createElement(Main, { nickname: createNickName(5) }), document.getElementById('container'));
+	exports.default = ChatPane;
 
 /***/ }
 /******/ ]);
