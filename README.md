@@ -1,9 +1,9 @@
 # Rxjs Chat Room
-This is a chatroom application implemented by Rxjs, Socket IO and React.
+> This is a chatroom application implemented by Rxjs, Socket IO and React.
 
 ## Technology
 Rxjs: create multiple observables(streams) to send/receive messages from clients.  
-SocketIO: setup connections between multiple clients and server.  
+Socket IO: setup connections between multiple clients and server.  
 React: build UI in the chat room.  
 Webpack: bundle all required modules into single js file.    
 
