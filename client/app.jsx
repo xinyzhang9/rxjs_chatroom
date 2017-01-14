@@ -3,13 +3,14 @@
 var AppBar = React.createClass({
 	render(){
 		return (
-			<div className = 'navbar-fixed'>
+			<div className = 'navbar-fixed' >
 				<nav>
-					<div className = 'nav-wrapper'>
-						<a href = '#' className = 'brand-logo center'>Chat Room</a>
-						<ul id = 'nav-mobile' className = 'left hide-on-med-and-down'>
-							<li><a href = '#'>About</a></li>
-						</ul>
+					<div className = 'nav-wrapper' style = {{backgroundColor: 'steelblue'}}>
+						<a href = '#' className = 'brand-logo center'>Welcome to Rxjs Chat Room</a>
+						<ul id="nav-mobile" className="right hide-on-med-and-down">
+					        <li><a href="https://github.com/xinyzhang9/rxjs_chatroom" target = '_blank'>Source Code</a></li>
+					        <li><a href="https://xinyzhang9.github.io/" target = '_blank'>About Author</a></li>
+					    </ul>
 					</div>
 				</nav>
 			</div>
@@ -21,11 +22,11 @@ var PresencePane = React.createClass({
 	render(){
 		return(
 			<div>
-				<h4>Online Users</h4>
+				<h5>Online Users</h5>
 				<table className = 'striped'>
 					<thead>
 						<tr>
-							<th data-field = 'id'>Nickname</th>
+							<th data-field = 'id'>Chat ID</th>
 							<th data-field = 'name>'>Joined Time</th>
 						</tr>
 					</thead>
@@ -72,13 +73,13 @@ var ChatPane = React.createClass({
 	render(){
 		return(
 			<div>
-				<h4>Your nickname is {this.props.data.nickname}</h4>
+				<h5>Your Chat ID is <i>{this.props.data.nickname}</i></h5>
 				<ul className = 'collection'>
 				{
 					this.props.data.messages.map((message,index)=>{
 						return(
 							<li className = 'collection-item' key = {message.timestamp}>
-								<span className = 'title'>{message.who}<i>{moment(parseInt(message.timestamp)).format('YYYY-mm-dd HH:mm:ss')}</i></span>
+								<span className = 'title'>{message.who} <span style = {{color:'red'}}>@</span><span style = {{color:'green'}}>{moment(parseInt(message.timestamp)).format('YYYY-MM-DD HH:mm:ss')}</span></span>
 								<p>
 									<strong>{message.message}</strong>
 								</p>
@@ -127,7 +128,6 @@ var Main = React.createClass({
 				socketId: data.socketId,
 				connectTime: data.connectTime
 			});
-			console.log('client connect success');
 		});
 
 		var socketAllUsersStream = Rx.Observable.create(observer => {
@@ -136,7 +136,6 @@ var Main = React.createClass({
 
 		socketAllUsersStream.subscribe(data => { 
 			self.setState({users: data}); // don't miss{}
-			console.log(self.state.users);
 		});
 
 		var socketMessagesStream = Rx.Observable.create(observer => {
@@ -146,7 +145,6 @@ var Main = React.createClass({
 		socketMessagesStream.subscribe(data => {
 			messages.push(data);
 			self.setState(messages);
-			console.log(self.state);
 		});
 
 	},

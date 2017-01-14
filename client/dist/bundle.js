@@ -58,22 +58,31 @@
 					null,
 					React.createElement(
 						'div',
-						{ className: 'nav-wrapper' },
+						{ className: 'nav-wrapper', style: { backgroundColor: 'steelblue' } },
 						React.createElement(
 							'a',
 							{ href: '#', className: 'brand-logo center' },
-							'Chat Room'
+							'Welcome to Rxjs Chat Room'
 						),
 						React.createElement(
 							'ul',
-							{ id: 'nav-mobile', className: 'left hide-on-med-and-down' },
+							{ id: 'nav-mobile', className: 'right hide-on-med-and-down' },
 							React.createElement(
 								'li',
 								null,
 								React.createElement(
 									'a',
-									{ href: '#' },
-									'About'
+									{ href: 'https://github.com/xinyzhang9/rxjs_chatroom', target: '_blank' },
+									'Source Code'
+								)
+							),
+							React.createElement(
+								'li',
+								null,
+								React.createElement(
+									'a',
+									{ href: 'https://xinyzhang9.github.io/', target: '_blank' },
+									'About Author'
 								)
 							)
 						)
@@ -90,7 +99,7 @@
 				'div',
 				null,
 				React.createElement(
-					'h4',
+					'h5',
 					null,
 					'Online Users'
 				),
@@ -106,7 +115,7 @@
 							React.createElement(
 								'th',
 								{ 'data-field': 'id' },
-								'Nickname'
+								'Chat ID'
 							),
 							React.createElement(
 								'th',
@@ -180,10 +189,14 @@
 				'div',
 				null,
 				React.createElement(
-					'h4',
+					'h5',
 					null,
-					'Your nickname is ',
-					this.props.data.nickname
+					'Your Chat ID is ',
+					React.createElement(
+						'i',
+						null,
+						this.props.data.nickname
+					)
 				),
 				React.createElement(
 					'ul',
@@ -196,10 +209,16 @@
 								'span',
 								{ className: 'title' },
 								message.who,
+								' ',
 								React.createElement(
-									'i',
-									null,
-									moment(parseInt(message.timestamp)).format('YYYY-mm-dd HH:mm:ss')
+									'span',
+									{ style: { color: 'red' } },
+									'@'
+								),
+								React.createElement(
+									'span',
+									{ style: { color: 'green' } },
+									moment(parseInt(message.timestamp)).format('YYYY-MM-DD HH:mm:ss')
 								)
 							),
 							React.createElement(
