@@ -16,3 +16,4 @@ React: build UI in the chat room.
 - [x] Display realtime information for online users  
 
 ## Screenshot
+![alt tag](https://raw.githubusercontent.com/xinyzhang9/rxjs_chatroom/master/screen.png)
