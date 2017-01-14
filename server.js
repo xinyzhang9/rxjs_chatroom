@@ -47,7 +47,7 @@ var sourceConnect = Rx.Observable.create(function(observer){
 });
 
 var sourceDisconnect = Rx.Observable.create(function(observable){
-	io.on('connection',function(socket){
+	io.on('disconnect',function(socket){
 		observable.onNext({
 			'socketId':socket.id,
 			'event': 'clientDisconnect'
